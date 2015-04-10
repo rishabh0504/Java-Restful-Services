@@ -45,9 +45,9 @@ public class RestfulServices {
 	@POST
 	@Path("post")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String post(String oldData, String newData) {
-
-		return null;
+	public String post(String updateData) throws UnknownHostException {
+		String responce = new Todo().update(updateData);
+		return responce;
 	}
 
 	@DELETE
@@ -57,5 +57,6 @@ public class RestfulServices {
 		Todo todo = new Todo();
 		String responce = todo.delete(data);
 		return responce;
+
 	}
 }

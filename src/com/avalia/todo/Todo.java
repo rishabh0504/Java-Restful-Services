@@ -17,9 +17,11 @@ public class Todo {
 	private boolean completed;
 
 	public Todo(DBObject obj) {
-		this.title = (String) obj.get("title");
-		this.desc = (String) obj.get("desc");
-		this.completed = (boolean) obj.get("completed");
+		BasicDBObject object = new BasicDBObject();
+		object = (BasicDBObject) obj;
+		this.title = object.getString("title");
+		this.desc = object.getString("desc");
+		this.completed = object.getBoolean("completed");
 	}
 
 	public Todo(String title, String desc, boolean completed) {
@@ -59,9 +61,28 @@ public class Todo {
 	public String delete(String data) throws UnknownHostException {
 		DBCollection collection = DBManager.getDB().getCollection("todos");
 		BasicDBObject object = new BasicDBObject();
-		object.put("title", JSON.parse(data));
+		object.put("desc", JSON.parse(data));
 		collection.remove(object);
 		return "removed";
+	}
+
+	public String update(String updateData) throws UnknownHostException {
+		String oldDescription = "";
+		String newDescription = "";
+		JsonElement obj = new JsonParser().parse(updateData);
+		if (obj instanceof JsonObject) {
+			JsonObject todo = (JsonObject) obj;
+			oldDescription = todo.get("desc").getAsString();
+			newDescription = todo.get("newDesc").getAsString();
+		}
+		DBCollection collection = DBManager.getDB().getCollection("todos");
+		BasicDBObject newDocument = new BasicDBObject();
+		newDocument.append("desc", newDescription);
+		BasicDBObject searchQuery = new BasicDBObject();
+		searchQuery.put("desc", oldDescription);
+		collection.update(searchQuery, newDocument);
+		return "updated";
+
 	}
 
 }

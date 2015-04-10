@@ -13,7 +13,6 @@ public class TodoTest {
 				System.out.println(t);
 			}
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
